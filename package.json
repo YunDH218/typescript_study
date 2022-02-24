@@ -1,0 +1,24 @@
+{
+  "name": "typescript_study",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YunDH218/typescript_study.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YunDH218/typescript_study/issues"
+  },
+  "homepage": "https://github.com/YunDH218/typescript_study#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}
