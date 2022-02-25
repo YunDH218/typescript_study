@@ -119,13 +119,66 @@ person = ["gran_dev_hun", 23];
 const [name, age] = person; // const name: string, const age: number
 ```
 
-# Any
-자료형을 제한하지 않을 때, 나중에 정할 때 사용한다.  
-(type safety를 위해 최대한 사용하지 않는 것이 권장된다.)
+## Any
+자료형을 제한하지 않을 때, 값을 동적으로 할당할 때 사용한다. (type safety를 위해 최대한 사용하지 않는 것이 권장된다.)
 ```ts
 function returnAny(message: any): any {
   console.log(message);
 }
 returnAny('gran_dev_hun');
 returnAny(23);
+```
+any는 개체를 통해 전파된다. any의 property의 자료형은 any가 된다.
+```ts
+const looselyTyped: any = {};
+const d = looselyTyped.a.b.c; // 지정하지 않은 property나 method를 입력해도 error가 발생하지 않는다. --> type safety를 잃는다. const d: any
+```
+any가 필요한 상황에서 any의 leaking을 막기 위해서는 속성마다 자료형을 명시하는 작업이 필요하다.
+```ts
+function addOne(obj: any) {
+  const a: number = obj.num; // 속성의 자료형 명시(명시하지 않았다면 a는 any)
+  return a + 1;
+}
+const b = addOne({ num: 0 });
+b.indexOf("0"); // error: 자료형이 any가 아닌 number이므로 string의 method 사용 불가
+```
+
+## Unknown
+값을 동적으로 할당할 때 사용한다. any와 다르게 전파되지 않기 때문에 더 안전하다.
+```ts
+declare const maybe: unknown;
+if(maybe === true) {
+  const aBoolean: boolean = maybe; // 해당 if문 안에서 maybe는 boolean data가 된다.
+  const aString: string = maybe; // type error 발생, any보다 안전하다.
+}
+if(typeof maybe === "string") {
+  const aString: string = maybe; // 해당 if문 안에서 maybe는 string data가 된다.
+  const aBoolean: boolean = maybe; // type error 발생, any보다 안전하다.
+}
+```
+위와 같은 작업을 통해 자료형을 제한해주는 것을 type-guard라고 한다.
+
+## Never
+어떠한 type도 아니라는 의미. 일반적으로 `return`에 사용된다.
+```ts
+function error(message: string): never {  // 어떠한 값도 반환되지 않음
+  throw new Error(message);
+}
+function infiniteLoop(): never {
+  while (true) {}
+}
+```
+모든 타입의 subtype이며, 모든 타입에 할당할 수 있다. 하지만 never에는 어떤 것도 할당할 수 없다.(any 포함) 잘못된 타입을 넣는 실수를 막고자 할 때 사용하기도 한다.
+```ts
+type Indexable<S> = S extends string ? S & { [index: string]: any } : never;
+type ObjeectIdexable = Indexable<{}>; // string이 아닌 경우의 실수를 막도록 never가 된다.
+```
+
+## Void
+빈 타입. 값을 할당할 수 없다. JS는 다른 언어와 달리 undefined가 있기 때문에 사실상 void가 필요하지 않다. return type으로 사용.
+```ts
+function returnVoid() {
+  return;
+}
+const r = returnVoid(); // const r: void
 ```
